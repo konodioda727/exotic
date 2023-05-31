@@ -201,7 +201,7 @@ export default {
       const start = (this.curPage - 1) * 5;
       const end = this.curPage * 5;
       const showData = this.allData?this.allData.slice(start, end):[1,2,3,4,5];
-      // console.log(this.allData,showData);
+      console.log(this.allData,showData);
       const sellerName = showData.map((item) => {
         return item.name;
       });

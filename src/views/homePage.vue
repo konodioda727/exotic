@@ -1,5 +1,10 @@
 <template>
     <div class="home-page">
+        <div class="hoverPage" @click = "handle">
+            <div class="hoverslide">Exotic</div>
+            <div class="hoverbottom">监控平台</div>
+            <Loading v-if="naviShow" class="naviload"/>
+        </div>
         <vue-particles
                 color="#30539D"
                 :particleOpacity="0.7"
@@ -20,11 +25,19 @@
             </vue-particles>
         <div class="centerBox">
             <div class="logo"></div>
-            <div class="name">基于自监督学习的Web数据智能管理系统</div>
-            <textarea name="" id="" cols="30" rows="10" placeholder="请输入SQL语句（不输入将以默认值发送）"></textarea>
+            <div class="box" >
+                <div class="name-top">基于自监督学习的</div>
+                <div class="name-bottom" >Web数据智能管理系统</div>
+            </div>
+            <div class="textarea">
+                <write-sql
+                    ref="changeSql"
+                    @input="input"
+                    :valueC="data_value"
+                ></write-sql>
+            </div>
             <div class="button" @click = "hoverPage">完成</div>
         </div>
-        
         <div class="hover" v-if="hoverShow">
             <div class="mask" @click = "hoverClose"></div>
             <div class="modal">
@@ -43,16 +56,20 @@
 <script>
 import axios from 'axios';
 import Loading from '../components/Loading.vue'
+import writeSql from '../components/writeSql.vue'
   export default {
     components: {
-      Loading
+      Loading,
+      writeSql,
     },
     data() {
       return {
         hoverShow: false,
+        naviShow: false,
         LoadingShow: true,
         renderData: '',
         renderList:[],
+        data_value: '',
         data : "select\ndom_base_uri(dom) as `url`,\ndom_first_text(dom, &apos;#productTitle&apos;) as `title`,\nstr_substring_after(dom_first_href(dom, &apos;#wayfinding-breadcrumbs_container ul li:last-child a&apos;), &apos;&node=&apos;) as `category`,\ndom_first_slim_html(dom, &apos;#bylineInfo&apos;) as `brand`,\ncast(dom_all_slim_htmls(dom, &apos;#imageBlock img&apos;) as varchar) as `gallery`,\ndom_first_slim_html(dom, &apos;#landingImage, #imgTagWrapperId img, #imageBlock img:expr(width > 400)&apos;) as `img`,\ndom_first_text(dom, &apos;#price tr td:contains(List Price) ~ td&apos;) as `listprice`,\ndom_first_text(dom, &apos;#price tr td:matches(^Price) ~ td&apos;) as `price`,\nstr_first_float(dom_first_text(dom, &apos;#reviewsMedley .AverageCustomerReviews span:contains(out of)&apos;), 0.0) as `score`\nfrom load_out_pages(&apos; https://www.amazon.com/b?node=3117954011&apos;, &apos;a[href~=/dp/]&apos;, 1, 10);",
       };
     },
@@ -65,29 +82,47 @@ import Loading from '../components/Loading.vue'
     methods: {
         async hoverPage() {
             this.hoverShow = true
-            var config = {
-                method: 'post',
-                url: 'http://118.31.54.166:8182/api/x/e',
-                headers: { 
-                    'Access-Control-Request-Headers': 'text/plain', 
-                },
-                data : this.data
-            };
-            this.renderList = await axios(config)
-                .then(function (response) {
-                console.log(JSON.stringify(response.data));
-                this.renderData = response.data
-                this.renderList = response.data.slice('\n')
-                console.log('renderList',this.renderList);
-                return response.split('\n')
-                })
-                .catch(function () {
-                    let response = 'render\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n22\n44\n55\n66\n67567\n8\n\n7k\n7\n'
-                    return response.split('\n')
-            });
+            // var config = {
+            //     method: 'post',
+            //     url: 'http://118.31.54.166:8182/api/x/e',
+            //     headers: { 
+            //         'Access-Control-Request-Headers': 'text/plain', 
+            //     },
+            //     data : this.data
+            // };
+            // this.renderList = response.split('\n')
+            // await axios(config)
+            //     .then(function (response) {
+            //     console.log(JSON.stringify(response.data));
+            //     this.renderData = response.data
+            //     this.renderList = response.data.slice('\n')
+            //     console.log('renderList',this.renderList);
+            //     return response.split('\n')
+            //     })
+            //     .catch(function () {
+            //         let response = 'render\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n22\n44\n55\n66\n67567\n8\n\n7k\n7\n'
+            //         return response.split('\n')
+            // });
             setTimeout(() => {
                 this.LoadingShow = false;
             }, 4000);
+        },
+        handle() {
+            console.log('navi');
+            document.querySelector('.hoverslide').classList.add('click')
+            document.querySelector('.hoverbottom').classList.add('click')
+            setTimeout(() => {
+                this.naviShow = true
+            }, 400);
+            
+            setTimeout(()=>{
+                window.location.href = "http://data.platonic.fun/exotic/crawl/"
+                this.naviShow = false
+            },2000)
+        },
+        input(e) {
+            console.log(e);
+            this.data_value = e
         },
         hoverClose() {
             this.hoverShow = false
@@ -98,6 +133,11 @@ import Loading from '../components/Loading.vue'
 </script>
   
 <style lang="less" scoped>
+@font-face {
+  font-family: 'CustomFont';
+  src: url('../assets/font/ZhengQingKeLengKuTi-2.ttf');
+  /* 如果字体文件在其他路径下，请根据实际路径进行调整 */
+}
     ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -139,6 +179,20 @@ import Loading from '../components/Loading.vue'
             
         }
     }
+    .naviload {
+        position: absolute;
+        top: 42%;
+        left:50%;
+        transform: translate(-50%,-50%);
+        z-index: 20001;
+    }
+    .click {
+        width: 50vw !important;
+        z-index: 20000 !important;
+        background-color: #f0f0f0 !important;
+        color: #30539D !important;
+        font-size: 40px !important;
+    }
     .mask {
         position: absolute;
         top: 0;
@@ -147,13 +201,76 @@ import Loading from '../components/Loading.vue'
         bottom: 0;
         z-index: 100;
     }
+    .box {
+        .name-top {
+            text-align: center;
+            font-size: 36px;
+            margin-top: 0;
+            // font-size: 40px;
+            line-height: 36px;
+            color: #30539D;
+            background-color: #fff;
+            font-family: 'CustomFont', sans-serif;
+        }
+        .name-bottom {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 60px;
+            line-height: 60px;
+            color: #30539D;
+            background-color: #fff;
+            font-family: 'CustomFont', sans-serif;
+            font-weight: bold;
+        }
+    }
+    .hoverPage {
+        font-family: 'CustomFont', sans-serif;
+        &:hover {
+            .hoverslide {
+                height: 100%;
+                line-height: 100vh;
+                border-radius: 0 0;
+            }
+            .hoverbottom {
+                height: 100%;
+                line-height: 100vh;
+                border-radius: 0 0;
+            }
+        }
+        .hoverslide {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 6vh;
+            border-radius: 0 0  40px 40px;
+            background-color: #30539D;
+            line-height: 6vh;
+            color: #fff;
+            text-align: center;
+            transition: all .4s ease-in-out;
+        }
+        .hoverbottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 6vh;
+            line-height: 6vh;
+            border-radius: 40px 40px 0 0;
+            background-color: #30539D;
+            color: #fff;
+            text-align: center;
+            transition: all .4s ease-in-out;
+        }
+    }
     .modal {
         animation: appear .3s ease-in-out forwards;
         position: absolute;
         top: 50%;
         left: 50%;
         width: 62%;
-        height: 84%;
+        height: 92%;
         transform: translate(-50%, -50%);
         // background: url('../../public/static/template.json');
         // display: flex;
@@ -238,36 +355,27 @@ import Loading from '../components/Loading.vue'
             flex-direction: column;
             align-items: center;
             align-content: center;
-            margin-top: 60px;
+            // margin-top: 20px;
             
             .logo {
                 width: 400px;
-                height: 170px;
+                height: 160px;
                 background: url('../assets/logof.png') no-repeat;
                 background-size: 400px,200px;
-                // background: url('../../public/static/praticales.json');
             }
-            .name {
-                margin-top: 0;
-                font-size: 40px;
-                line-height: 40px;
-                color: #30539D;
-                background-color: #fff;
-            }
-            textarea {
-                margin-top: 50px;
-                appearance: none;
-                border-radius: 10px;
-                outline: none;
-                border: 0;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.2);
-                font-size: 16px;
-                padding: 10px;
-                width: 600px;
-                height: 200px;
-                resize: none;
-            }
-            
+        }
+        .textarea {
+            margin-top: 50px;
+            appearance: none;
+            border-radius: 10px;
+            outline: none;
+            border: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            padding: 10px;
+            width: 600px;
+            height: 200px;
+            resize: none;
         }
     }
 </style>
