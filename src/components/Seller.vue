@@ -36,15 +36,15 @@ export default {
   },
   mounted() {
     // 在组件创建完成之后，进行回调函数的注册
-    this.$socket.registerCallBack("sellerData", this.getData);
+    // this.$socket.registerCallBack("sellerData", this.getData);
     this.initChart();
-    // this.getData();
-    this.$socket.send({
-      action: "getData",
-      socketType: "sellerData",
-      chartName: "seller",
-      value: "",
-    });
+    this.getData();
+    // this.$socket.send({
+    //   action: "getData",
+    //   socketType: "sellerData",
+    //   chartName: "seller",
+    //   value: "",
+    // });
     window.addEventListener("resize", this.screenAdapter);
     // 在页面加载完成的时候，主动进行屏幕的适配
     this.screenAdapter();
@@ -54,7 +54,7 @@ export default {
     clearInterval(this.timer);
     // 在组件销毁时，需将监听器注销
     window.removeEventListener("resize", this.screenAdapter);
-    this.$socket.unRegisterCallBack("sellerData");
+    // this.$socket.unRegisterCallBack("sellerData");
   },
   computed: {
     ...mapState(["theme"]),

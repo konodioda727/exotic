@@ -7,7 +7,7 @@
 <template>
   <div class="com-container">
     <div class="title" :style="comStyle">
-      <span style="cursor: pointer">{{ "▎ " + showTitle }}</span>
+      <!-- <span style="cursor: pointer">{{ "▎ " + showTitle }}</span> -->
       <!-- <span
         class="iconfont icon-arrow-down title-icon"
         :style="comStyle"
@@ -45,23 +45,24 @@ export default {
   },
   mounted() {
     // 在组件创建完成之后，进行回调函数的注册
-    this.$socket.registerCallBack("trendData", this.getData);
+    // this.$socket.registerCallBack("trendData", this.getData);
     this.initChart();
+    this.updateChart()
     // this.getData();
     // 发送数据给服务端，告诉服务端，前端现在需要数据
-    this.$socket.send({
-      action: "getData",
-      socketType: "trendData",
-      chartName: "trend",
-      value: ""
-    })
+    // this.$socket.send({
+    //   action: "getData",
+    //   socketType: "trendData",
+    //   chartName: "trend",
+    //   value: ""
+    // })
     window.addEventListener("resize", this.screenAdapter);
     this.screenAdapter();
   },
   destroyed() {
     window.removeEventListener("resize", this.screenAdapter);
     // 在组件销毁时，进行回调函数取消
-    this.$socket.unRegisterCallBack("trendData");
+    // this.$socket.unRegisterCallBack("trendData");
   },
   computed: {
     ...mapState(["theme"]),
@@ -107,6 +108,11 @@ export default {
     initChart() {
       this.myChart = this.$echarts.init(this.$refs.trend_ref, this.theme);
       const initOption = {
+        title: {
+          text: '▎ 各商品分析',
+          left: 20,
+          top: 20
+        },
         grid: {
           left: "3%",
           top: "30%",
@@ -191,6 +197,11 @@ export default {
       //   return item.name;
       // });
       const dataOption = {
+        // title: {
+        //   text: '▎ 各商品分析',
+        //   left: 20,
+        //   top: 20
+        // },
         xAxis: {
           data: timeArr,
           axisLabel : {//坐标轴刻度标签的相关设置。
@@ -230,6 +241,7 @@ export default {
                       return newParamsName
           }}
         },
+        // ['2022','2021']
         legend: {
           data:['2022','2021']
         },

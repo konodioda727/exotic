@@ -40,7 +40,7 @@ export default {
   },
   destroyed() {
     window.removeEventListener("resize", this.screenAdapter);
-    this.$socket.unRegisterCallBack("hotData");
+    // this.$socket.unRegisterCallBack("hotData");
   },
   computed: {
     ...mapState(["theme"]),

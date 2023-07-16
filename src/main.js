@@ -7,14 +7,14 @@ import axios from 'axios'
 import './assets/font/iconfont.css'
 // 引入全局的样式文件
 import './assets/css/global.less'
-import SocketService from '@/utils/socket_service'
+// import SocketService from '@/utils/socket_service'
 import VueParticles from 'vue-particles'  
 Vue.use(VueParticles)
 // 对服务端进行websocket的连接
-SocketService.Instance.connect()
+// SocketService.Instance.connect()
 // 将SocketService对象挂载到Vue的原型对象上
 // 在别的组件中使用 this.$socket
-Vue.prototype.$socket = SocketService.Instance;
+// Vue.prototype.$socket = SocketService.Instance;
 
 // 请求基准路径的配置
 axios.defaults.baseURL = '/api/'

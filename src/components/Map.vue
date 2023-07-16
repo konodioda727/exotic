@@ -42,21 +42,21 @@ export default {
   },
   mounted() {
     // 在组件创建完成之后，进行回调函数的注册
-    this.$socket.registerCallBack("mapData", this.getData);
+    // this.$socket.registerCallBack("mapData", this.getData);
     this.initChart();
     // this.getData();
-    this.$socket.send({
-      action: "getData",
-      socketType: "mapData",
-      chartName: "map",
-      value: ""
-    })
+    // this.$socket.send({
+    //   action: "getData",
+    //   socketType: "mapData",
+    //   chartName: "map",
+    //   value: ""
+    // })
     window.addEventListener("resize", this.screenAdapter);
     this.screenAdapter();
   },
   destroyed() {
     window.removeEventListener("resize", this.screenAdapter);
-    this.$socket.unRegisterCallBack("mapData");
+    // this.$socket.unRegisterCallBack("mapData");
   },
   computed: {
     ...mapState(["theme"]),

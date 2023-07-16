@@ -1,5 +1,5 @@
 <template>
-    <div class="home-page">
+    <div class="home-page"  >
         <div class="hoverPage" @click = "handle">
             <div class="hoverslide">Exotic</div>
             <div class="hoverbottom">监控平台</div>
@@ -36,18 +36,22 @@
                     :valueC="data_value"
                 ></write-sql>
             </div>
-            <div class="button" @click = "hoverPage">完成</div>
+            <div class="button-wrap">
+                <div class="button" @click = "hoverPage">完成</div>
+                <router-link to="/screen" style="text-decoration: none;" class="navigator"><div class="button" @click = "hoverPage">查看示例</div></router-link>
+            </div>
+            <div class="place"></div>
         </div>
         <div class="hover" v-if="hoverShow">
             <div class="mask" @click = "hoverClose"></div>
             <div class="modal">
                 <Loading v-if="LoadingShow"/>
-                <div class="contanier" v-if="!LoadingShow">
-                    <div class="content">{{ renderData }}</div>
+                <div class="contanier" v-if="!LoadingShow" @scroll="handleScroll">
+                    <div class="content" >{{ renderData }}</div>
                     <!-- <div class="content"  v-for="item,index in renderList" :key = "index">{{ item }}</div> -->
                 </div>
             </div>
-            <router-link to="/screen" style="text-decoration: none;" class="navigator"><div class="button longer" @click = "hoverPage">前往数据可视化界面</div></router-link>
+            <!-- <router-link to="/screen" style="text-decoration: none;" class="navigator"><div class="button longer" @click = "hoverPage">前往数据可视化界面</div></router-link> -->
         </div>
     </div>
     
@@ -74,10 +78,14 @@ import writeSql from '../components/writeSql.vue'
       };
     },
     mounted() {
+        window.addEventListener('scroll', this.handleScroll);
         axios.get(`//${location.host}/static/template.json`).then((res) => {
             this.renderData = JSON.stringify(res.data[0])
             // console.log('render',JSON.stringify(res.data[0]));
         })
+    },
+    beforeDestroy() {
+        window.removeEventListener('scroll', this.handleScroll);
     },
     methods: {
         async hoverPage() {
@@ -105,7 +113,23 @@ import writeSql from '../components/writeSql.vue'
             // });
             setTimeout(() => {
                 this.LoadingShow = false;
-            }, 4000);
+            }, 24000);
+        },
+        navigate() {
+
+        },
+        handleScroll(event) {
+        // 获取滚动容器的滚动位置
+        const scrollTop = event.target.scrollTop;
+        console.log(11111111);
+        // 判断滚动位置，根据需求进行处理
+        if (scrollTop > 500) {
+            // 滚动位置大于 500 的处理逻辑
+            // ...
+        } else if (scrollTop > 200) {
+            // 滚动位置大于 200 的处理逻辑
+            // ...
+        }
         },
         handle() {
             console.log('navi');
@@ -138,6 +162,11 @@ import writeSql from '../components/writeSql.vue'
   src: url('../assets/font/ZhengQingKeLengKuTi-2.ttf');
   /* 如果字体文件在其他路径下，请根据实际路径进行调整 */
 }
+.place {
+    height: 200vh;
+    width: 20vw;
+    background:transparent;
+}
     ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -158,7 +187,7 @@ import writeSql from '../components/writeSql.vue'
     /* 滑道样式 */
     ::-webkit-scrollbar-track {
     background-color: #f7f7f7;
-    display: none;
+    // display: none;
     }
     .back {
         width: 100vw;
@@ -294,10 +323,12 @@ import writeSql from '../components/writeSql.vue'
             overflow: auto;
         }
     }
-    .button{
+    .button-wrap{
         // animation: appear .4s ease-in-out forwards;
         margin-top: 30px;
-        color: #30539D;
+        display: flex;
+        .button {
+            color: #30539D;
         cursor: pointer;
         background-color: #fff;
         width: 80px;
@@ -305,12 +336,14 @@ import writeSql from '../components/writeSql.vue'
         line-height: 40px;
         text-align: center;
         border-radius: 10px;
+        margin:10px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.2);
         &:hover {
             animation: color .3s ease-in-out forwards;
         }
         &:active {
             animation: colorReverse .3s ease-in-out forwards;
+        }
         }
     }
     @keyframes color {
@@ -336,11 +369,12 @@ import writeSql from '../components/writeSql.vue'
         }
     }
     .navigator {
-        position: absolute;
-        bottom: 50px;
-        left:50%;
-        transform: translateX(-50%);
-        z-index: 103;
+        // position: absolute;
+        // bottom: 50px;
+        // left:50%;
+        // transform: translateX(-50%);
+        // z-index: 103;
+        
     }
     .longer {
         width: 200px;
@@ -356,7 +390,7 @@ import writeSql from '../components/writeSql.vue'
             align-items: center;
             align-content: center;
             // margin-top: 20px;
-            
+            // overflow: auto;
             .logo {
                 width: 400px;
                 height: 160px;

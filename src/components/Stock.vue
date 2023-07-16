@@ -77,22 +77,22 @@ export default {
   mounted() {
     // 在组件创建完成之后，进行回调函数的注册
     
-    // this.getData(0)
-    this.$socket.registerCallBack("stockData", this.getData);
+    this.getData()
+    // this.$socket.registerCallBack("stockData", this.getData);
     this.initChart();
-    this.$socket.send({
-      action: "getData",
-      socketType: "stockData",
-      chartName: "stock",
-      value: ""
-    })
+    // this.$socket.send({
+    //   action: "getData",
+    //   socketType: "stockData",
+    //   chartName: "stock",
+    //   value: ""
+    // })
     window.addEventListener("resize", this.screenAdapter);
     this.screenAdapter();
   },
   destroyed() {
     clearInterval(this.timer);
     window.removeEventListener("resize", this.screenAdapter);
-    this.$socket.unRegisterCallBack("stockData");
+    // this.$socket.unRegisterCallBack("stockData");
   },
   computed: {
     ...mapState(["theme"]),
@@ -169,7 +169,7 @@ export default {
         },
         backgroundColor: getThemeValue(this.theme).bgColor,
       };
-      // this.getData()
+      this.getData()
       this.myChart.setOption(initOption);
       this.myChart.on('mouseover', (e) => {
         // console.log('over');

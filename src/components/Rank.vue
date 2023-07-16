@@ -30,22 +30,22 @@ export default {
   },
   mounted() {
     // 在组件创建完成之后，进行回调函数的注册
-    this.$socket.registerCallBack("rankData", this.getData);
+    // this.$socket.registerCallBack("rankData", this.getData);
     this.initChart();
-    // this.getData();
-    this.$socket.send({
-      action: "getData",
-      socketType: "rankData",
-      chartName: "rank",
-      value: ""
-    })
+    // // this.getData();
+    // this.$socket.send({
+    //   action: "getData",
+    //   socketType: "rankData",
+    //   chartName: "rank",
+    //   value: ""
+    // })
     window.addEventListener("resize", this.screenAdapter);
     this.screenAdapter();
   },
   destroyed() {
     clearInterval(this.timer);
     window.removeEventListener("resize", this.screenAdapter);
-    this.$socket.unRegisterCallBack("rankData");
+    // this.$socket.unRegisterCallBack("rankData");
   },
   computed: {
     ...mapState(["theme"]),
@@ -115,10 +115,11 @@ export default {
     getData(ret) {
       // const { data: ret } = await this.$http.get("rank");
       // console.log(ret);
-      this.allData = ret;
-      this.allData.sort((a, b) => {
-        return b.value - a.value;
-      });
+      // this.allData = ret;
+      // this.allData.sort((a, b) => {
+      //   return b.value - a.value;
+      // });
+      console.log(ret);
       this.updateChart();
       this.startInterval();
     },
@@ -268,14 +269,14 @@ export default {
       if (this.timer) {
         clearInterval(this.timer);
       }
-
       this.timer = setInterval(() => {
         this.startValue++;
         this.endValue++;
-        if (this.endValue > this.allData.length - 1) {
+        if (this.endValue > 19) {
           this.startValue = 0;
           this.endValue = 9;
         }
+        console.log('111');
         this.updateChart();
       }, 2000);
     },
